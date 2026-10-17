@@ -5,12 +5,12 @@ import threading
 from pyrogram import Client, filters
 from pyrogram.types import Message
 
-# تشغيل خادم وهمي لمنع Render من إيقاف البوت
+# خادم وهمي لضمان بقاء البوت شغالاً على Render
 web_app = Flask('')
 
 @web_app.route('/')
 def home():
-    return "Bot is running 24/7!"
+    return "Bot is active and running 24/7!"
 
 def run_web():
     web_app.run(host='0.0.0.0', port=10000)
@@ -30,23 +30,28 @@ TARGET_CHANNELS = [
 
 COMMENT_TEXT = "The best 🤍"
 
-app = Client("my_session", api_id=API_ID, api_hash=API_HASH, session_string=SESSION_STRING)
+# تهيئة عميل تيليجرام
+app = Client(
+    "my_bot_session",
+    api_id=API_ID,
+    api_hash=API_HASH,
+    session_string=SESSION_STRING
+)
 
 @app.on_message(filters.chat(TARGET_CHANNELS))
 async def auto_comment(client: Client, message: Message):
     try:
         await asyncio.sleep(1)
         await message.reply_text(COMMENT_TEXT)
-        print(f"✅ تم التعليق بنجاح في: {message.chat.title}")
+        print(f"✅ تم التعليق بنجاح في القناة: {message.chat.title}")
     except Exception as e:
-        print(f"❌ حدث خطأ أثناء التعليق: {e}")
+        print(f"❌ خطأ أثناء إرسال التعليق: {e}")
 
 async def main():
-    print("🚀 جاري تشغيل البوت على السحاب...")
+    print("🚀 جاري الاتصال بتيليجرام وتشغيل البوت...")
     await app.start()
-    print("✅ البوت يعمل بنجاح الآن ويراقب القنوات!")
+    print("🎉 البوت يعمل الآن بنجاح تام ويراقب القنوات!")
     await asyncio.Event().wait()
 
 if __name__ == "__main__":
-    loop = asyncio.get_event_loop()
-    loop.run_until_complete(main())
+    app.run(main())
