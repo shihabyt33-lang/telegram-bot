@@ -1,7 +1,6 @@
 import asyncio
 import os
 
-# إنشاء حلقة أحداث مسبقاً لمنع خطأ Python 3.14 في Pyrogram
 try:
     loop = asyncio.get_event_loop()
 except RuntimeError:
