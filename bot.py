@@ -39,6 +39,20 @@ async def auto_comment(client: Client, message: Message):
     except Exception as e:
         print(f"❌ خطأ أثناء إرسال التعليق: {e}")
 
+async def main():
+    async with app:
+        print("🚀 جاري بدء تشغيل البوت وتسجيل القنوات المستهدفة...")
+        
+        # إجبار البوت على جلب القنوات وتخزينها في ذاكرة الجلسة لمنع خطأ Peer ID
+        for channel in TARGET_CHANNELS:
+            try:
+                chat = await app.get_chat(channel)
+                print(f"✅ تم ربط وتخزين القناة بنجاح: {chat.title} (ID: {chat.id})")
+            except Exception as e:
+                print(f"⚠️ تنبيه بخصوص القناة {channel}: {e}")
+
+        print("🎉 البوت متصل الآن ويراقب القنوات بانتظار المنشورات الجديدة...")
+        await asyncio.Event().wait()
+
 if __name__ == "__main__":
-    print("🚀 جاري بدء تشغيل بوت تليجرام...")
-    app.run()
+    app.run(main())
