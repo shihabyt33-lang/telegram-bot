@@ -1,21 +1,7 @@
 import os
 import asyncio
-from flask import Flask
-import threading
 from pyrogram import Client, filters
 from pyrogram.types import Message
-
-# خادم وهمي لمنع Render من إيقاف الخدمة
-web_app = Flask('')
-
-@web_app.route('/')
-def home():
-    return "Bot is active and running 24/7!"
-
-def run_web():
-    web_app.run(host='0.0.0.0', port=10000)
-
-threading.Thread(target=run_web, daemon=True).start()
 
 API_ID = int(os.getenv("API_ID", "31167565"))
 API_HASH = os.getenv("API_HASH", "bec8dcd33707d37c90c6bc4cc1994e5f")
@@ -46,16 +32,6 @@ async def auto_comment(client: Client, message: Message):
     except Exception as e:
         print(f"❌ خطأ أثناء إرسال التعليق: {e}")
 
-async def main():
-    print("🚀 جاري الاتصال بتيليجرام وتشغيل البوت...")
-    await app.start()
-    print("🎉 البوت يعمل الآن بنجاح تام ويراقب القنوات!")
-    # استخدام طريقة آمنة ومستقرة للبقاء قيد التشغيل
-    await asyncio.Event().wait()
-
 if __name__ == "__main__":
-    try:
-        asyncio.run(main())
-    except RuntimeError:
-        loop = asyncio.get_event_loop()
-        loop.run_until_complete(main())
+    print("🚀 جاري بدء تشغيل بوت تليجرام مباشرة...")
+    app.run()
