@@ -5,6 +5,7 @@ import threading
 from pyrogram import Client, filters
 from pyrogram.types import Message
 
+# تشغيل خادم وهمي لمنع Render من إيقاف البوت
 web_app = Flask('')
 
 @web_app.route('/')
@@ -14,7 +15,7 @@ def home():
 def run_web():
     web_app.run(host='0.0.0.0', port=10000)
 
-threading.Thread(target=run_web).start()
+threading.Thread(target=run_web, daemon=True).start()
 
 API_ID = int(os.getenv("API_ID", "31167565"))
 API_HASH = os.getenv("API_HASH", "bec8dcd33707d37c90c6bc4cc1994e5f")
@@ -38,7 +39,14 @@ async def auto_comment(client: Client, message: Message):
         await message.reply_text(COMMENT_TEXT)
         print(f"✅ تم التعليق بنجاح في: {message.chat.title}")
     except Exception as e:
-        print(f"❌ حدث خطأ: {e}")
+        print(f"❌ حدث خطأ أثناء التعليق: {e}")
 
-print("🚀 البوت يعمل الآن على السحاب...")
-app.run()
+async def main():
+    print("🚀 جاري تشغيل البوت على السحاب...")
+    await app.start()
+    print("✅ البوت يعمل بنجاح الآن ويراقب القنوات!")
+    await asyncio.Event().wait()
+
+if __name__ == "__main__":
+    loop = asyncio.get_event_loop()
+    loop.run_until_complete(main())
