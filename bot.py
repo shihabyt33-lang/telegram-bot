@@ -5,7 +5,7 @@ import threading
 from pyrogram import Client, filters
 from pyrogram.types import Message
 
-# خادم وهمي لضمان بقاء البوت شغالاً على Render
+# خادم وهمي لمنع Render من إيقاف الخدمة
 web_app = Flask('')
 
 @web_app.route('/')
@@ -30,7 +30,6 @@ TARGET_CHANNELS = [
 
 COMMENT_TEXT = "The best 🤍"
 
-# تهيئة عميل تيليجرام
 app = Client(
     "my_bot_session",
     api_id=API_ID,
@@ -51,7 +50,12 @@ async def main():
     print("🚀 جاري الاتصال بتيليجرام وتشغيل البوت...")
     await app.start()
     print("🎉 البوت يعمل الآن بنجاح تام ويراقب القنوات!")
+    # استخدام طريقة آمنة ومستقرة للبقاء قيد التشغيل
     await asyncio.Event().wait()
 
 if __name__ == "__main__":
-    app.run(main())
+    try:
+        asyncio.run(main())
+    except RuntimeError:
+        loop = asyncio.get_event_loop()
+        loop.run_until_complete(main())
