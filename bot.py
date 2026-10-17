@@ -1,5 +1,13 @@
-import os
 import asyncio
+import os
+
+# إنشاء حلقة أحداث مسبقاً لمنع خطأ Python 3.14 في Pyrogram
+try:
+    loop = asyncio.get_event_loop()
+except RuntimeError:
+    loop = asyncio.new_event_loop()
+    asyncio.set_event_loop(loop)
+
 from pyrogram import Client, filters
 from pyrogram.types import Message
 
@@ -33,5 +41,5 @@ async def auto_comment(client: Client, message: Message):
         print(f"❌ خطأ أثناء إرسال التعليق: {e}")
 
 if __name__ == "__main__":
-    print("🚀 جاري بدء تشغيل بوت تليجرام مباشرة...")
+    print("🚀 جاري بدء تشغيل بوت تليجرام...")
     app.run()
